@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wolfpack — April Leaderboard</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1b33;
+      --card2:#0c172d;
+      --text:#eaf0ff;
+      --muted:#a9b7df;
+      --line:rgba(255,255,255,.10);
+      --accent:#7c5cff;
+
+      --ram:#3b82f6;
+      --mano:#22c55e;
+
+      --gold:#fbbf24;
+      --silver:#cbd5e1;
+      --bronze:#fb7185;
+      --shadow: 0 12px 36px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 15% -10%, rgba(124,92,255,.30), transparent 55%),
+                  radial-gradient(900px 450px at 95% 0%, rgba(34,197,94,.20), transparent 60%),
+                  radial-gradient(900px 500px at 85% 75%, rgba(59,130,246,.18), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.4;
+    }
+
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 60px}
+    header{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+      padding:18px 18px 10px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .title{
+      display:flex; align-items:center; gap:12px;
+    }
+    .badge{
+      width:44px;height:44px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(59,130,246,.85));
+      display:grid;place-items:center;
+      box-shadow: 0 14px 28px rgba(124,92,255,.18);
+      border:1px solid rgba(255,255,255,.20);
+      font-weight:800;
+    }
+    h1{margin:0;font-size:26px;letter-spacing:.2px}
+    .sub{color:var(--muted);margin-top:6px;font-size:14px}
+    .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{
+      font-size:12px;color:#dce6ff;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding:6px 10px;border-radius:999px;
+    }
+    .right{
+      display:flex; flex-direction:column; gap:10px; align-items:flex-end;
+      min-width:260px;
+    }
+    .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    button{
+      appearance:none;border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      font-weight:600;
+    }
+    button:hover{background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18)}
+    button:active{transform: translateY(1px)}
+    .smallnote{font-size:12px;color:var(--muted);text-align:right}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width:900px){
+      .grid{grid-template-columns: 1fr}
+      .right{align-items:flex-start;min-width:auto}
+      header{flex-direction:column}
+      .btns{justify-content:flex-start}
+      .smallnote{text-align:left}
+    }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardhead{
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+    }
+    .cardhead h2{margin:0;font-size:16px}
+    .dot{
+      width:10px;height:10px;border-radius:999px;display:inline-block;margin-right:10px;
+      box-shadow: 0 0 0 4px rgba(255,255,255,.04);
+    }
+    .dot.ram{background:var(--ram)}
+    .dot.mano{background:var(--mano)}
+    .mini{
+      color:var(--muted);font-size:12px;white-space:nowrap;
+    }
+    .list{
+      padding:6px 10px 12px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 34px 1fr auto;
+      gap:10px;
+      padding:10px 8px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      align-items:center;
+    }
+    .row:last-child{border-bottom:none}
+    .rank{color:var(--muted);font-variant-numeric: tabular-nums}
+    .name{font-weight:700}
+    .meta{color:var(--muted);font-size:12px}
+    .pts{font-weight:900;font-variant-numeric: tabular-nums; font-size:18px}
+    .cap{opacity:.9;font-weight:700}
+    .cap::after{content:"  (C)"; color:var(--muted); font-weight:600}
+
+    .tablecard{margin-top:14px}
+    .tools{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.10);
+    }
+    .search{
+      flex:1;min-width:220px;
+      position:relative;
+    }
+    input[type="search"]{
+      width:100%;
+      padding:11px 12px 11px 36px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+    }
+    .search:before{
+      content:"⌕";
+      position:absolute;left:12px;top:50%;
+      transform:translateY(-50%);
+      color:var(--muted);
+      font-size:14px;
+    }
+    .hint{font-size:12px;color:var(--muted)}
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+    }
+    thead th{
+      text-align:left;
+      padding:12px 14px;
+      color:#dbe6ff;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      background: rgba(10,18,32,.92);
+      backdrop-filter: blur(6px);
+      cursor:pointer;
+      user-select:none;
+    }
+    tbody td{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    tbody tr:hover{
+      background: rgba(255,255,255,.03);
+    }
+    .teamtag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      font-size:12px;font-weight:700;
+    }
+    .teamtag .chip{width:8px;height:8px;border-radius:999px}
+    .teamtag.ram .chip{background:var(--ram)}
+    .teamtag.mano .chip{background:var(--mano)}
+    .ptsCell{font-weight:900;font-size:16px}
+    .medal{
+      display:inline-flex;align-items:center;gap:8px;
+      font-weight:800;
+    }
+    .micon{
+      width:22px;height:22px;border-radius:8px;display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      font-size:13px;
+    }
+    .micon.gold{background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.35)}
+    .micon.silver{background: rgba(203,213,225,.12); border-color: rgba(203,213,225,.30)}
+    .micon.bronze{background: rgba(251,113,133,.12); border-color: rgba(251,113,133,.30)}
+
+    footer{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="title">
+          <div class="badge">🐺</div>
+          <div>
+            <h1>Wolfpack — April Leaderboard</h1>
+            <div class="sub">Apr 1 – Apr 30 · 23 players · 2 teams · Dog-ear passes excluded</div>
+            <div class="pillrow">
+              <span class="pill">Points = Run pts + Str pts + Culture pts</span>
+              <span class="pill">G &amp; I excluded as per rules</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="btns">
+          <button id="copyLinkBtn" title="Copy a shareable link to this page (works best once hosted)">Copy share link</button>
+          <button onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="smallnote">
+          Tip: Host this file on GitHub Pages/Netlify to share as a URL.
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="cardhead">
+          <h2><span class="dot ram"></span>Team Ram — Top 5</h2>
+          <div class="mini">R = Runs · S = Str</div>
+        </div>
+        <div class="list" id="teamRamTop5"></div>
+      </section>
+
+      <section class="card">
+        <div class="cardhead">
+          <h2><span class="dot mano"></span>Team Mano — Top 5</h2>
+          <div class="mini">R = Runs · S = Str</div>
+        </div>
+        <div class="list" id="teamManoTop5"></div>
+      </section>
+    </div>
+
+    <section class="card tablecard">
+      <div class="tools">
+        <div class="search">
+          <input id="q" type="search" placeholder="Search player or team…" />
+        </div>
+        <div class="hint">Click table headers to sort.</div>
+      </div>
+
+      <div style="overflow:auto; max-height: 70vh;">
+        <table id="tbl">
+          <thead>
+            <tr>
+              <th data-key="rank">#</th>
+              <th data-key="player">Player</th>
+              <th data-key="team">Team</th>
+              <th data-key="run">Run</th>
+              <th data-key="str">Str</th>
+              <th data-key="rSes">R ses</th>
+              <th data-key="sSes">S ses</th>
+              <th data-key="points">Points</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Built as a single HTML file — easy to share, print, or host.
+    </footer>
+  </div>
+
+<script>
+  // Data transcribed from your screenshot (Overall standings).
+  const data = [
+    { rank: 1,  player: "Mano",           team: "Mano", run: 156, str: 120, rSes: 14, sSes: 12, points: 276, captain:true },
+    { rank: 2,  player: "Sanjeev",        team: "Ram",  run: 150, str: 120, rSes: 13, sSes: 12, points: 270 },
+    { rank: 3,  player: "Kirupa",         team: "Ram",  run: 150, str: 115, rSes: 12, sSes: 12, points: 265 },
+    { rank: 4,  player: "Sethu",          team: "Mano", run: 134, str: 130, rSes: 12, sSes: 13, points: 264 },
+    { rank: 5,  player: "VP",             team: "Ram",  run: 150, str: 110, rSes: 13, sSes: 11, points: 260 },
+    { rank: 5,  player: "Usha",           team: "Mano", run: 150, str: 110, rSes: 13, sSes: 11, points: 260 },
+    { rank: 7,  player: "Ram",            team: "Ram",  run: 120, str: 135, rSes: 10, sSes: 14, points: 255 },
+    { rank: 8,  player: "Poonthamizhan",  team: "Ram",  run: 124, str: 115, rSes: 11, sSes: 12, points: 239 },
+    { rank: 9,  player: "UK",             team: "Mano", run: 112, str: 120, rSes:  9, sSes: 12, points: 235 },
+    { rank: 10, player: "Rags",           team: "Ram",  run: 131, str:  75, rSes: 11, sSes:  9, points: 206 },
+    { rank: 11, player: "Arjun",          team: "Mano", run: 134, str:  70, rSes: 11, sSes:  8, points: 204 },
+    { rank: 12, player: "Raashi",         team: "Mano", run:  87, str: 100, rSes:  7, sSes: 11, points: 187 },
+    { rank: 13, player: "Anitha",         team: "Mano", run: 102, str:  55, rSes:  8, sSes:  6, points: 157 },
+    { rank: 14, player: "Ravi",           team: "Mano", run: 131, str:  25, rSes: 11, sSes:  4, points: 156 },
+    { rank: 15, player: "Anush",          team: "Mano", run:  87, str:  60, rSes:  7, sSes:  6, points: 147 },
+    { rank: 16, player: "Bibek",          team: "Mano", run:  68, str:  55, rSes:  7, sSes:  7, points: 123 },
+    { rank: 17, player: "Pradheep",       team: "Ram",  run:  92, str:  30, rSes:  7, sSes:  3, points: 122 },
+    { rank: 17, player: "Kalai",          team: "Ram",  run: 122, str:   0, rSes: 10, sSes:  0, points: 122 },
+    { rank: 19, player: "Aathi",          team: "Ram",  run:  87, str:  30, rSes:  7, sSes:  3, points: 117 },
+    { rank: 20, player: "Sandy",          team: "Ram",  run:  75, str:  40, rSes:  5, sSes:  4, points: 115 },
+    { rank: 21, player: "Rahul",          team: "Ram",  run:  92, str:  10, rSes:  8, sSes:  1, points: 102 },
+    { rank: 22, player: "Priya",          team: "Ram",  run:  51, str:  40, rSes:  4, sSes:  4, points:  91 },
+    { rank: 23, player: "Strom",          team: "Mano", run:  60, str:   0, rSes:  5, sSes:  0, points:  60 }
+  ];
+
+  const tbody = document.getElementById("tbody");
+  const q = document.getElementById("q");
+  const tbl = document.getElementById("tbl");
+  let sortKey = "points";
+  let sortDir = "desc";
+
+  function medalForRank(r){
+    if (r === 1) return { label: "Gold", cls: "gold", icon: "🥇" };
+    if (r === 2) return { label: "Silver", cls: "silver", icon: "🥈" };
+    if (r === 3) return { label: "Bronze", cls: "bronze", icon: "🥉" };
+    return null;
+  }
+
+  function teamTag(team){
+    const cls = team.toLowerCase() === "ram" ? "ram" : "mano";
+    return `<span class="teamtag ${cls}"><span class="chip"></span>${team}</span>`;
+  }
+
+  function renderTop5(){
+    const ram = [...data].filter(d => d.team === "Ram").sort((a,b)=>b.points-a.points).slice(0,5);
+    const mano = [...data].filter(d => d.team === "Mano").sort((a,b)=>b.points-a.points).slice(0,5);
+
+    const makeRow = (d, i, team) => {
+      const meta = `R:${d.rSes} S:${d.sSes}`;
+      const name = d.captain ? `<span class="cap">${d.player}</span>` : d.player;
+      return `
+        <div class="row">
+          <div class="rank">${i+1}</div>
+          <div>
+            <div class="name">${name}</div>
+            <div class="meta">${meta}</div>
+          </div>
+          <div class="pts">${d.points}</div>
+        </div>
+      `;
+    };
+
+    document.getElementById("teamRamTop5").innerHTML = ram.map((d,i)=>makeRow(d,i,"Ram")).join("");
+    document.getElementById("teamManoTop5").innerHTML = mano.map((d,i)=>makeRow(d,i,"Mano")).join("");
+  }
+
+  function compare(a,b,key){
+    const va = a[key], vb = b[key];
+    if (typeof va === "number" && typeof vb === "number") return va - vb;
+    return String(va).localeCompare(String(vb));
+  }
+
+  function renderTable(){
+    const term = q.value.trim().toLowerCase();
+    let rows = [...data];
+
+    if(term){
+      rows = rows.filter(d =>
+        d.player.toLowerCase().includes(term) ||
+        d.team.toLowerCase().includes(term)
+      );
+    }
+
+    rows.sort((a,b)=>{
+      const c = compare(a,b,sortKey);
+      return sortDir === "asc" ? c : -c;
+    });
+
+    tbody.innerHTML = rows.map(d=>{
+      const medal = medalForRank(d.rank);
+      const playerCell = medal
+        ? `<span class="medal"><span class="micon ${medal.cls}">${medal.icon}</span>${d.captain ? `<span class="cap">${d.player}</span>` : d.player}</span>`
+        : (d.captain ? `<span class="cap">${d.player}</span>` : d.player);
+
+      return `
+        <tr>
+          <td>${d.rank}</td>
+          <td>${playerCell}</td>
+          <td>${teamTag(d.team)}</td>
+          <td>${d.run}</td>
+          <td>${d.str}</td>
+          <td>${d.rSes}</td>
+          <td>${d.sSes}</td>
+          <td class="ptsCell">${d.points}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  // Sorting: click headers
+  tbl.querySelectorAll("thead th").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      const key = th.getAttribute("data-key");
+      if(!key) return;
+      if (sortKey === key) sortDir = (sortDir === "asc" ? "desc" : "asc");
+      else { sortKey = key; sortDir = (key === "player" || key === "team") ? "asc" : "desc"; }
+      renderTable();
+    });
+  });
+
+  q.addEventListener("input", renderTable);
+
+  // Copy share link (works best when hosted; otherwise it copies a "file://" URL which may not open for teammates)
+  document.getElementById("copyLinkBtn").addEventListener("click", async ()=>{
+    const url = location.href;
+    try{
+      await navigator.clipboard.writeText(url);
+      alert("Link copied: " + url);
+    }catch(e){
+      prompt("Copy this link:", url);
+    }
+  });
+
+  renderTop5();
+  renderTable();
+</script>
+</body>
+</html>
